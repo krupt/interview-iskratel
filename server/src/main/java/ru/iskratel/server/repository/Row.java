@@ -1,14 +1,21 @@
 package ru.iskratel.server.repository;
 
-import javax.annotation.concurrent.NotThreadSafe;
+import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.Objects;
 
-@NotThreadSafe
-class Row<T> {
+@ThreadSafe
+@Immutable
+public class Row<T, U> {
 
-    private T content;
+    private final T content;
 
-    private String lastUpdatedSessionId;
+    private final U sign;
+
+    public Row(T content, U sign) {
+        this.content = content;
+        this.sign = sign;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -20,11 +27,14 @@ class Row<T> {
         }
         Row row = (Row) o;
         return Objects.equals(content, row.content) &&
-                Objects.equals(lastUpdatedSessionId, row.lastUpdatedSessionId);
+                Objects.equals(sign, row.sign);
     }
 
-    /*@Override
-    public int hashCode() {
-        return Objects.hash(content, lastUpdatedSessionId);
-    }*/
+    public T getContent() {
+        return content;
+    }
+
+    public U getSign() {
+        return sign;
+    }
 }

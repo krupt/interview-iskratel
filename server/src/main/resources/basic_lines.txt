@@ -1,0 +1,21 @@
+In multiprocessor systems, processors generally have one or more layers of memory cache, which improves performance both by speeding access to data(because the data is closer to the processor) and reducing traffic on the shared memory bus (because many memory operations can be satisfied by local caches).
+Memory caches can improve performance tremendously, but they present a host of new challenges. What, for example, happens when two processors examine the same memory location at the same time? Under what conditions will they see the same value?
+At the processor level, a memory model defines necessary and sufficient conditions for knowing that writes to memory by other processors are visible to the current processor, and writes by the current processor are visible to other processors.
+Some processors exhibit a strong memory model, where all processors see exactly the same value for any given memory location at all times.
+Other processors exhibit a weaker memory model, where special instructions, called memory barriers, are required to flush or invalidate the local processor cache in order to see writes made by other processors or make writes by this processor visible to others.
+These memory barriers are usually performed when lock and unlock actions are taken; they are invisible to programmers in a high level language.
+It can sometimes be easier to write programs for strong memory models, because of the reduced need for memory barriers.
+However, even on some of the strongest memory models, memory barriers are often necessary; quite frequently their placement is counterintuitive.
+Recent trends in processor design have encouraged weaker memory models, because the relaxations they make for cache consistency allow for greater scalability across multiple processors and larger amounts of memory.
+The issue of when a write becomes visible to another thread is compounded by the compiler's reordering of code.
+For example, the compiler might decide that it is more efficient to move a write operation later in the program; as long as this code motion does not change the program's semantics, it is free to do so.
+If a compiler defers an operation, another thread will not see it until it is performed; this mirrors the effect of caching.
+Moreover, writes to memory can be moved earlier in a program; in this case, other threads might see a write before it actually "occurs" in the program.
+All of this flexibility is by design -- by giving the compiler, runtime, or hardware the flexibility to execute operations in the optimal order, within the bounds of the memory model, we can achieve higher performance.
+Most other programming languages, such as C and C++, were not designed with direct support for multithreading.
+The protections that these languages offer against the kinds of reorderings that take place in compilers and architectures are heavily dependent on the guarantees provided by the threading libraries used (such as pthreads), the compiler used, and the platform on which the code is run.
+Since 1997, several serious flaws have been discovered in the Java Memory Model as defined in Chapter 17 of the Java Language Specification.
+These flaws allowed for confusing behaviors (such as final fields being observed to change their value) and undermined the compiler's ability to perform common optimizations.
+The Java Memory Model was an ambitious undertaking; it was the first time that a programming language specification attempted to incorporate a memory model which could provide consistent semantics for concurrency across a variety of architectures.
+Unfortunately, defining a memory model which is both consistent and intuitive proved far more difficult than expected. JSR 133 defines a new memory model for the Java language which fixes the flaws of the earlier memory model.
+In order to do this, the semantics of final and volatile needed to change.

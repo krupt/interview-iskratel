@@ -7,9 +7,9 @@ public class Request {
 
     private String content;
 
-    private int index;
+    private Integer index;
 
-    private Operation operation;
+    private String operationName;
 
     public String getUsername() {
         return username;
@@ -27,20 +27,20 @@ public class Request {
         this.content = content;
     }
 
-    public int getIndex() {
+    public Integer getIndex() {
         return index;
     }
 
-    public void setIndex(int index) {
+    public void setIndex(Integer index) {
         this.index = index;
     }
 
-    public Operation getOperation() {
-        return operation;
+    public String getOperationName() {
+        return operationName;
     }
 
-    public void setOperation(Operation operation) {
-        this.operation = operation;
+    public void setOperationName(String operationName) {
+        this.operationName = operationName;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class Request {
                 "username='" + username + '\'' +
                 ", content='" + content + '\'' +
                 ", index=" + index +
-                ", operation=" + operation +
+                ", operationName=" + operationName +
                 '}';
     }
 }

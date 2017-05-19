@@ -1,6 +1,6 @@
 package ru.iskratel.server.util;
 
-import ru.iskratel.server.model.Operation;
+import ru.iskratel.server.spi.Operation;
 
 import java.util.UUID;
 

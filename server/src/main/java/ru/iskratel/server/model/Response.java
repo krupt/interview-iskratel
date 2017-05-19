@@ -21,4 +21,12 @@ public final class Response {
     public String getContent() {
         return content;
     }
+
+    @Override
+    public String toString() {
+        return "Response{" +
+                "message='" + message + '\'' +
+                ", content='" + content + '\'' +
+                '}';
+    }
 }
