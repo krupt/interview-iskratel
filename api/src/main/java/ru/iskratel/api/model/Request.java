@@ -1,4 +1,4 @@
-package ru.iskratel.server.model;
+package ru.iskratel.api.model;
 
 import java.util.Objects;
 

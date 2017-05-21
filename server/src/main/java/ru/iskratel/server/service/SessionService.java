@@ -1,6 +1,6 @@
 package ru.iskratel.server.service;
 
-import ru.iskratel.server.model.Request;
+import ru.iskratel.api.model.Request;
 import ru.iskratel.server.util.Cache;
 import ru.iskratel.server.util.ConcurrentExpirationCache;
 import ru.iskratel.server.util.Session;

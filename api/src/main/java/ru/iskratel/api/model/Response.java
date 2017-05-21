@@ -1,8 +1,5 @@
-package ru.iskratel.server.model;
+package ru.iskratel.api.model;
 
-import javax.annotation.concurrent.Immutable;
-
-@Immutable
 public final class Response {
 
     private final String message;

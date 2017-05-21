@@ -2,8 +2,8 @@ package ru.iskratel.server.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.iskratel.server.model.Request;
-import ru.iskratel.server.model.Response;
+import ru.iskratel.api.model.Request;
+import ru.iskratel.api.model.Response;
 import ru.iskratel.server.spi.Operation;
 import ru.iskratel.server.util.Session;
 

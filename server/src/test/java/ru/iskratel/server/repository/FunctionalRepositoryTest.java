@@ -2,7 +2,7 @@ package ru.iskratel.server.repository;
 
 import org.junit.Before;
 import org.junit.Test;
-import ru.iskratel.server.model.Request;
+import ru.iskratel.api.model.Request;
 import ru.iskratel.server.service.SessionService;
 
 import java.util.Arrays;

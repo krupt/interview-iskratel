@@ -1,7 +1,7 @@
 package ru.iskratel.server.spi;
 
-import ru.iskratel.server.model.Request;
-import ru.iskratel.server.model.Response;
+import ru.iskratel.api.model.Request;
+import ru.iskratel.api.model.Response;
 
 public interface Operation {
 

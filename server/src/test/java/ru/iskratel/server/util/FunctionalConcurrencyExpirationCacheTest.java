@@ -40,7 +40,7 @@ public class FunctionalConcurrencyExpirationCacheTest {
                 assertEquals("12345", kovalev1);
                 cache.put("kovalev", "654321");
                 log.debug("Putted new value for \"kovalev\"");
-                Thread.sleep(9999);
+                Thread.sleep(9900);
                 String kovalev2 = cache.get("kovalev");
                 log.debug("Value for \"kovalev\": {}", kovalev2);
                 assertEquals("654321", kovalev2);
@@ -59,7 +59,7 @@ public class FunctionalConcurrencyExpirationCacheTest {
         Thread.sleep(3000);
         log.debug("Checking map size");
         assertEquals(1, map.size());
-        Thread.sleep(10000);
+        Thread.sleep(11000);
         log.debug("Checking map size");
         assertEquals(0, map.size());
     }

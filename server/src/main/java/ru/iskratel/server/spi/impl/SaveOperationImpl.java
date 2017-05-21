@@ -1,8 +1,8 @@
 package ru.iskratel.server.spi.impl;
 
 import ru.iskratel.server.Application;
-import ru.iskratel.server.model.Request;
-import ru.iskratel.server.model.Response;
+import ru.iskratel.api.model.Request;
+import ru.iskratel.api.model.Response;
 import ru.iskratel.server.repository.InMemoryStorage;
 import ru.iskratel.server.service.SessionService;
 import ru.iskratel.server.spi.Operation;
