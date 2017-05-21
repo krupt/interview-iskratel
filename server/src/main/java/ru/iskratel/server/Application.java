@@ -63,13 +63,13 @@ public class Application implements Runnable {
 
     public static void main(String[] args) throws InvalidConfigurationException, IOException {
         new Thread(getInstance()).start();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         //noinspection InfiniteLoopStatement
         while (true) {
-            String line = reader.readLine();
+            final String line = reader.readLine();
             try {
-                Path path = Paths.get(line);
-                URL url = path.toUri().toURL();
+                final Path path = Paths.get(line);
+                final URL url = path.toUri().toURL();
                 log.info("Loading {} to classpath", url);
                 getInstance().operationService.addJarToClassPath(url);
                 log.info("{} loaded", url);
@@ -80,7 +80,7 @@ public class Application implements Runnable {
     }
 
     private Application() throws InvalidConfigurationException {
-        Properties applicationProperties = new Properties();
+        final Properties applicationProperties = new Properties();
         try (InputStream propertiesStream = this.getClass().getResourceAsStream("/application.properties")) {
             applicationProperties.load(propertiesStream);
         } catch (IOException e) {
@@ -125,9 +125,9 @@ public class Application implements Runnable {
                 executorService.execute(() -> {
                     try (InputStream input = socket.getInputStream();
                          PrintWriter output = new PrintWriter(socket.getOutputStream())) {
-                        ObjectReader reader = mapper.readerFor(Request.class);
-                        Request request = reader.readValue(input);
-                        Response response = operationService.processRequest(request);
+                        final ObjectReader reader = mapper.readerFor(Request.class);
+                        final Request request = reader.readValue(input);
+                        final Response response = operationService.processRequest(request);
                         log.debug("response = {}", response);
                         mapper.writeValue(output, response);
                     } catch (IOException e) {

@@ -1,7 +1,6 @@
 package ru.iskratel.server.util;
 
 import ru.iskratel.server.model.Request;
-import ru.iskratel.server.repository.Row;
 
 import java.util.UUID;
 
@@ -9,9 +8,7 @@ public class Session {
 
     private final UUID id = UUID.randomUUID();
 
-    private volatile int lastRowId;
-
-    private volatile long lastReadCommitId;
+    private volatile long lastCommitId;
 
     private volatile Request lastRequest;
 
@@ -21,20 +18,12 @@ public class Session {
         return id;
     }
 
-    public int getLastRowId() {
-        return lastRowId;
+    public long getLastCommitId() {
+        return lastCommitId;
     }
 
-    public void setLastRowId(int lastRowId) {
-        this.lastRowId = lastRowId;
-    }
-
-    public long getLastReadCommitId() {
-        return lastReadCommitId;
-    }
-
-    public void setLastReadCommitId(long lastReadCommitId) {
-        this.lastReadCommitId = lastReadCommitId;
+    public void setLastCommitId(long lastCommitId) {
+        this.lastCommitId = lastCommitId;
     }
 
     public Request getLastRequest() {

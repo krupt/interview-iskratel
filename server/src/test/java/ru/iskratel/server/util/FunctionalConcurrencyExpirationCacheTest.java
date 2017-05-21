@@ -1,10 +1,8 @@
-package ru.iskratel.util;
+package ru.iskratel.server.util;
 
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.iskratel.server.util.Cache;
-import ru.iskratel.server.util.ConcurrentExpirationCache;
 
 import java.lang.reflect.Field;
 import java.util.Map;

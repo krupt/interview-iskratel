@@ -5,6 +5,7 @@ import ru.iskratel.server.util.Cache;
 import ru.iskratel.server.util.ConcurrentExpirationCache;
 import ru.iskratel.server.util.Session;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class SessionService {
@@ -27,5 +28,9 @@ public class SessionService {
             sessionCache.put(request.getUsername(), session);
         }
         sessionHolder.set(session);
+    }
+
+    public static Map<String, Session> getCacheStamp() {
+        return sessionCache.asUnmodifiableMap();
     }
 }

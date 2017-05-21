@@ -23,22 +23,23 @@ public class ConcurrentExpirationCache<K, V> implements Cache<K, V> {
     private final long expirationTimeMillis;
 
     public ConcurrentExpirationCache(long expirationTime, TimeUnit unit) {
-        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(() -> {
-            log.debug("Cleanup started");
-            Iterator<Map.Entry<K, ExpirationValue>> entryIterator = map.entrySet().iterator();
-            while (entryIterator.hasNext()) {
-                Map.Entry<K, ExpirationValue> entry = entryIterator.next();
-                if (entry.getValue().isExpired()) {
-                    entryIterator.remove();
-                    log.debug("Removed expired entry with key = {}, value = {}", entry.getKey(), entry.getValue());
-                }
-            }
-        }, expirationTime, expirationTime / 2, unit);
+        Executors.newScheduledThreadPool(1)
+                .scheduleAtFixedRate(() -> {
+                    log.debug("Cleanup started");
+                    Iterator<Map.Entry<K, ExpirationValue>> entryIterator = map.entrySet().iterator();
+                    while (entryIterator.hasNext()) {
+                        Map.Entry<K, ExpirationValue> entry = entryIterator.next();
+                        if (entry.getValue().isExpired()) {
+                            entryIterator.remove();
+                            log.debug("Removed expired entry with key = {}, value = {}", entry.getKey(), entry.getValue());
+                        }
+                    }
+                }, expirationTime, expirationTime / 2, unit);
         this.expirationTimeMillis = unit.toMillis(expirationTime);
     }
 
     public V get(K key) {
-        ExpirationValue expirationValue = map.get(key);
+        final ExpirationValue expirationValue = map.get(key);
         if (expirationValue != null) {
             if (!expirationValue.isExpired()) {
                 expirationValue.lastAccessTime = now();
@@ -54,7 +55,7 @@ public class ConcurrentExpirationCache<K, V> implements Cache<K, V> {
     }
 
     public Map<K, V> asUnmodifiableMap() {
-        Map<K, V> map = new HashMap<>();
+        final Map<K, V> map = new HashMap<>();
         for (Map.Entry<K, ExpirationValue> entry : this.map.entrySet()) {
             if (!entry.getValue().isExpired()) {
                 map.put(entry.getKey(), entry.getValue().value);

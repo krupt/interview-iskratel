@@ -1,1 +1,3 @@
-ru.iskratel.server.spi.impl.GetOperationImpl
+ru.iskratel.server.spi.impl.GetAllOperationImpl
+ru.iskratel.server.spi.impl.AddOperationImpl
+ru.iskratel.server.spi.impl.SaveOperationImpl

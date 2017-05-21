@@ -3,12 +3,15 @@ package ru.iskratel.server.service;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-public class UpdatableInRuntimeClassLoader extends URLClassLoader {
+class UpdatableInRuntimeClassLoader extends URLClassLoader {
 
-    public UpdatableInRuntimeClassLoader(URLClassLoader classLoader) {
+    UpdatableInRuntimeClassLoader(URLClassLoader classLoader) {
         super(classLoader.getURLs());
     }
 
+    /**
+     * Increase visibility-level
+     */
     @Override
     public void addURL(URL url) {
         super.addURL(url);

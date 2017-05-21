@@ -53,7 +53,7 @@ public class Request {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Request request = (Request) o;
+        final Request request = (Request) o;
         return Objects.equals(username, request.username) &&
                 Objects.equals(content, request.content) &&
                 Objects.equals(index, request.index) &&

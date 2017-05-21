@@ -5,7 +5,7 @@ import ru.iskratel.server.model.Response;
 
 public interface Operation {
 
-    boolean isSupported(Request request);
+    String getName();
 
     Response process(Request request);
 }
