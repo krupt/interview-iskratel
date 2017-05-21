@@ -1,10 +1,13 @@
 package ru.iskratel.api.model;
 
-public final class Response {
+public class Response {
 
-    private final String message;
+    private String message;
 
-    private final String content;
+    private String content;
+
+    public Response() {
+    }
 
     public Response(String message) {
         this.message = message;
@@ -20,8 +23,16 @@ public final class Response {
         return message;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public String getContent() {
         return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     @Override

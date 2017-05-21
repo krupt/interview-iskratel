@@ -19,7 +19,7 @@ public class AddOperationImpl implements Operation {
         final long lastCommitId = SessionService.getSession().getLastCommitId();
         final InMemoryStorage<String> storage = Application.getInstance().getStorage();
         if (storage.isStructChanged(index, lastCommitId)) {
-            return new Response("Content of lines changed. New content is: ",
+            return new Response("Line doesn't added. " + FAIL_MESSAGE_FOOTER,
                     StringUtils.joinWithIndexByNewLineCharacter(storage.getAll())
             );
         } else {

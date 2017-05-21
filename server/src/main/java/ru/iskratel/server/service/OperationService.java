@@ -27,22 +27,26 @@ public class OperationService {
         if (operation != null) {
             try {
                 return processOperationWithRequest(operation, request);
+            } catch (ArrayIndexOutOfBoundsException e) {
+                return new Response("Line " + request.getIndex() + " doesn't exists");
             } catch (Exception e) {
                 log.error("Processing request failed", e);
-                return new Response("Exception when executing operation: " + e.getMessage(), null);
+                return new Response(e.getClass().getName() + " when executing operation: " + e.getMessage(), null);
             }
         }
         return new Response("Unknown operation", null);
     }
 
     private Response processOperationWithRequest(Operation operation, Request request) {
-        if (request.getIndex() == null) {
+        if (operation.isIndexRequired() && request.getIndex() == null) {
             return new Response("Line index is required");
         }
-        Session session = SessionService.getSession();
-        long lastCommitId = session.getLastCommitId();
-        if (lastCommitId == 0) {
-            return new Response("You must read lines before add new line");
+        if (operation.isReadRequired()) {
+            Session session = SessionService.getSession();
+            long lastCommitId = session.getLastCommitId();
+            if (lastCommitId == 0) {
+                return new Response("You must read lines before add new line");
+            }
         }
         return operation.process(request);
     }

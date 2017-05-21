@@ -8,10 +8,10 @@ import ru.iskratel.server.util.StringUtils;
 
 import java.util.Collection;
 
-public class GetAllOperationImpl implements Operation {
+public class GetOperationImpl implements Operation {
 
     public String getName() {
-        return "getAll";
+        return "get";
     }
 
     public Response process(Request request) {

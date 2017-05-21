@@ -1,5 +1,6 @@
 package ru.iskratel.server;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
@@ -43,6 +44,7 @@ public class Application implements Runnable {
 
     static {
         mapper.disable(JsonParser.Feature.AUTO_CLOSE_SOURCE);
+        mapper.disable(JsonGenerator.Feature.AUTO_CLOSE_TARGET);
     }
 
     public static Application getInstance() {
@@ -127,6 +129,7 @@ public class Application implements Runnable {
                          PrintWriter output = new PrintWriter(socket.getOutputStream())) {
                         final ObjectReader reader = mapper.readerFor(Request.class);
                         final Request request = reader.readValue(input);
+                        log.debug("request = {}", request);
                         final Response response = operationService.processRequest(request);
                         log.debug("response = {}", response);
                         mapper.writeValue(output, response);

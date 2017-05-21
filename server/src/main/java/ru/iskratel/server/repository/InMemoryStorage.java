@@ -49,9 +49,7 @@ public class InMemoryStorage<T> {
     }
 
     public T get(int index) {
-        final T row = rows.get(index);
-        SessionService.getSession().setLastCommitId(commitId.get());
-        return row;
+        return rows.get(index);
     }
 
     @SuppressWarnings("unchecked")

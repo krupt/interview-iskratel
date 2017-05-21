@@ -5,6 +5,8 @@ import ru.iskratel.api.model.Response;
 
 public interface Operation {
 
+    String FAIL_MESSAGE_FOOTER = "View new value and try again";
+
     String getName();
 
     Response process(Request request);

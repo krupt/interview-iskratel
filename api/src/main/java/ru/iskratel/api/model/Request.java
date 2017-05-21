@@ -1,7 +1,5 @@
 package ru.iskratel.api.model;
 
-import java.util.Objects;
-
 @SuppressWarnings("unused")
 public class Request {
 
@@ -46,27 +44,12 @@ public class Request {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        final Request request = (Request) o;
-        return Objects.equals(username, request.username) &&
-                Objects.equals(content, request.content) &&
-                Objects.equals(index, request.index) &&
-                Objects.equals(operationName, request.operationName);
-    }
-
-    @Override
     public String toString() {
         return "Request{" +
                 "username='" + username + '\'' +
                 ", content='" + content + '\'' +
                 ", index=" + index +
-                ", operationName=" + operationName +
+                ", operationName='" + operationName + '\'' +
                 '}';
     }
 }

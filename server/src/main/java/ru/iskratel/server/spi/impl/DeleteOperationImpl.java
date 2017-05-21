@@ -19,7 +19,8 @@ public class DeleteOperationImpl implements Operation {
         final long lastCommitId = SessionService.getSession().getLastCommitId();
         final InMemoryStorage<String> storage = Application.getInstance().getStorage();
         if (storage.isRowChanged(index, lastCommitId)) {
-            return new Response("Content of line changed. New content is: ", storage.get(index));
+            return new Response("Line doesn't removed. " + FAIL_MESSAGE_FOOTER,
+                    StringUtils.joinWithIndexByNewLineCharacter(storage.getAll()));
         } else {
             storage.remove(index);
             return new Response("Delete successful", StringUtils.joinWithIndexByNewLineCharacter(storage.getAll()));
