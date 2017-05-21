@@ -1,5 +1,7 @@
 package ru.iskratel.server.model;
 
+import java.util.Objects;
+
 @SuppressWarnings("unused")
 public class Request {
 
@@ -41,6 +43,21 @@ public class Request {
 
     public void setOperationName(String operationName) {
         this.operationName = operationName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Request request = (Request) o;
+        return Objects.equals(username, request.username) &&
+                Objects.equals(content, request.content) &&
+                Objects.equals(index, request.index) &&
+                Objects.equals(operationName, request.operationName);
     }
 
     @Override

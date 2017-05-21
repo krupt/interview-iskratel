@@ -10,9 +10,7 @@ import ru.iskratel.server.model.Request;
 import ru.iskratel.server.model.Response;
 import ru.iskratel.server.repository.InMemoryStorage;
 import ru.iskratel.server.service.OperationService;
-import ru.iskratel.server.util.Cache;
-import ru.iskratel.server.util.ConcurrentExpirationCache;
-import ru.iskratel.server.util.Session;
+import ru.iskratel.server.service.SessionService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,7 +26,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Properties;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -42,7 +39,7 @@ public class Application implements Runnable {
     private final ServerSocket serverSocket;
     private final ExecutorService executorService;
     private final OperationService operationService;
-    private final InMemoryStorage<String, UUID> storage;
+    private final InMemoryStorage<String> storage;
 
     static {
         mapper.disable(JsonParser.Feature.AUTO_CLOSE_SOURCE);
@@ -103,6 +100,7 @@ public class Application implements Runnable {
         int sessionTimeoutMinutes;
         try {
             sessionTimeoutMinutes = Integer.parseInt(applicationProperties.getProperty("session.timeout"));
+            SessionService.init(sessionTimeoutMinutes, TimeUnit.MINUTES);
         } catch (Exception e) {
             throw new InvalidConfigurationException("Invalid session timeout", e);
         }
@@ -115,8 +113,7 @@ public class Application implements Runnable {
             throw new InvalidConfigurationException("Couldn't read basic lines from file", e);
         }
         storage.init(lines);
-        Cache<String, Session> sessionCache = new ConcurrentExpirationCache<>(sessionTimeoutMinutes, TimeUnit.MINUTES);
-        operationService = new OperationService(sessionCache);
+        operationService = new OperationService();
     }
 
     public void run() {
@@ -143,7 +140,7 @@ public class Application implements Runnable {
         }
     }
 
-    public InMemoryStorage<String, UUID> getStorage() {
+    public InMemoryStorage<String> getStorage() {
         return storage;
     }
 }

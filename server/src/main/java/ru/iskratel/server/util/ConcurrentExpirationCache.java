@@ -5,7 +5,9 @@ import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
@@ -51,8 +53,14 @@ public class ConcurrentExpirationCache<K, V> implements Cache<K, V> {
         map.put(key, new ExpirationValue(value));
     }
 
-    public void clear() {
-        map.clear();
+    public Map<K, V> asUnmodifiableMap() {
+        Map<K, V> map = new HashMap<>();
+        for (Map.Entry<K, ExpirationValue> entry : this.map.entrySet()) {
+            if (!entry.getValue().isExpired()) {
+                map.put(entry.getKey(), entry.getValue().value);
+            }
+        }
+        return Collections.unmodifiableMap(map);
     }
 
     private static long now() {

@@ -6,15 +6,15 @@ import java.util.Objects;
 
 @ThreadSafe
 @Immutable
-public class Row<T, U> {
+public class Row<T> {
 
     private final T content;
 
-    private final U sign;
+    private final long lastUpdatedCommitId;
 
-    public Row(T content, U sign) {
+    public Row(T content, long lastUpdatedCommitId) {
         this.content = content;
-        this.sign = sign;
+        this.lastUpdatedCommitId = lastUpdatedCommitId;
     }
 
     @Override
@@ -27,14 +27,14 @@ public class Row<T, U> {
         }
         Row row = (Row) o;
         return Objects.equals(content, row.content) &&
-                Objects.equals(sign, row.sign);
+                lastUpdatedCommitId == row.lastUpdatedCommitId;
     }
 
     public T getContent() {
         return content;
     }
 
-    public U getSign() {
-        return sign;
+    public long getLastUpdatedCommitId() {
+        return lastUpdatedCommitId;
     }
 }
