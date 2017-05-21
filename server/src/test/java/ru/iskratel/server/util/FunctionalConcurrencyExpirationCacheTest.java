@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 public class FunctionalConcurrencyExpirationCacheTest {
 
     private static final Logger log = LoggerFactory.getLogger(FunctionalConcurrencyExpirationCacheTest.class);
-    private Cache<String, String> cache = new ConcurrentExpirationCache<>(10, TimeUnit.SECONDS);
+    private final Cache<String, String> cache = new ConcurrentExpirationCache<>(10, TimeUnit.SECONDS);
     private volatile Throwable threadException;
 
     @Test
@@ -27,22 +27,22 @@ public class FunctionalConcurrencyExpirationCacheTest {
             try {
                 Thread.sleep(4000);
                 String kovalev = cache.get("kovalev");
-                log.debug("Getted \"kovalev\": {}", kovalev);
+                log.debug("Value for \"kovalev\": {}", kovalev);
                 assertEquals("12345", kovalev);
                 cache.put("kozlov", "543");
                 log.debug("Putted \"kozlov\"");
                 Thread.sleep(8975);
                 String ivanov = cache.get("ivanov");
-                log.debug("Getted \"ivanov\": {}", ivanov);
+                log.debug("Value for \"ivanov\": {}", ivanov);
                 assertEquals(null, ivanov);
                 String kovalev1 = cache.get("kovalev");
-                log.debug("Getted \"kovalev\": {}", kovalev1);
+                log.debug("Value for \"kovalev\": {}", kovalev1);
                 assertEquals("12345", kovalev1);
                 cache.put("kovalev", "654321");
                 log.debug("Putted new value for \"kovalev\"");
                 Thread.sleep(9999);
                 String kovalev2 = cache.get("kovalev");
-                log.debug("Getted \"kovalev\": {}", kovalev2);
+                log.debug("Value for \"kovalev\": {}", kovalev2);
                 assertEquals("654321", kovalev2);
             } catch (Exception e) {
                 threadException = new AssertionError("Thread execution failed", e);

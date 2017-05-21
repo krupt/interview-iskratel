@@ -10,9 +10,9 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
-public class RepositoryTest {
+public class FunctionalRepositoryTest {
 
-    private InMemoryStorage<String> storage = new InMemoryStorage<>();
+    private final InMemoryStorage<String> storage = new InMemoryStorage<>();
 
     @Before
     public void init() throws IllegalAccessException, NoSuchFieldException {

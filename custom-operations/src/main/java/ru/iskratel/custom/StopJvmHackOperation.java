@@ -6,14 +6,22 @@ import ru.iskratel.server.spi.Operation;
 
 public class StopJvmHackOperation implements Operation {
 
-    private static final String OPERATION_NAME = "crash";
-
-    public boolean isSupported(Request request) {
-        return OPERATION_NAME.equalsIgnoreCase(request.getOperationName());
+    public String getName() {
+        return "crash";
     }
 
     public Response process(Request request) {
         System.exit(1);
         return null;
+    }
+
+    @Override
+    public boolean isIndexRequired() {
+        return false;
+    }
+
+    @Override
+    public boolean isReadRequired() {
+        return false;
     }
 }

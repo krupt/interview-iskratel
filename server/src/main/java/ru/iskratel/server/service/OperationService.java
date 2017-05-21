@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import ru.iskratel.server.model.Request;
 import ru.iskratel.server.model.Response;
 import ru.iskratel.server.spi.Operation;
+import ru.iskratel.server.util.Session;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -25,13 +26,25 @@ public class OperationService {
         final Operation operation = availableOperations.get(request.getOperationName());
         if (operation != null) {
             try {
-                return operation.process(request);
+                return processOperationWithRequest(operation, request);
             } catch (Exception e) {
                 log.error("Processing request failed", e);
                 return new Response("Exception when executing operation: " + e.getMessage(), null);
             }
         }
         return new Response("Unknown operation", null);
+    }
+
+    private Response processOperationWithRequest(Operation operation, Request request) {
+        if (request.getIndex() == null) {
+            return new Response("Line index is required");
+        }
+        Session session = SessionService.getSession();
+        long lastCommitId = session.getLastCommitId();
+        if (lastCommitId == 0) {
+            return new Response("You must read lines before add new line");
+        }
+        return operation.process(request);
     }
 
     public void addJarToClassPath(URL url) {

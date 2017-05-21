@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @ThreadSafe
 public class InMemoryStorage<T> {
 
-    private static final long COMMIT_HISTORY_INTERVAL = 5;
+    private static final long COMMIT_HISTORY_CLEANER_INTERVAL = 5;
 
     private final List<T> rows = new CopyOnWriteArrayList<>();
     private final AtomicLong commitId = new AtomicLong(1);
@@ -45,7 +45,7 @@ public class InMemoryStorage<T> {
                             obsoleteIterator.remove();
                         }
                     }
-                }, COMMIT_HISTORY_INTERVAL, COMMIT_HISTORY_INTERVAL, TimeUnit.MINUTES);
+                }, COMMIT_HISTORY_CLEANER_INTERVAL, COMMIT_HISTORY_CLEANER_INTERVAL, TimeUnit.MINUTES);
     }
 
     public T get(int index) {
@@ -75,7 +75,15 @@ public class InMemoryStorage<T> {
         addReorderingHistory(index);
     }
 
+    public boolean isStructChanged(int index, long fromCommitId) {
+        return isStructOrRowChanged(index, fromCommitId, false);
+    }
+
     public boolean isRowChanged(int index, long fromCommitId) {
+        return isStructOrRowChanged(index, fromCommitId, true);
+    }
+
+    private boolean isStructOrRowChanged(int index, long fromCommitId, boolean checkRow) {
         final SortedMap<Long, CommitInfo> commitsAfter = commitHistory.tailMap(fromCommitId + 1);
         final Optional<Integer> minIndex = commitsAfter.values()
                 .stream()
@@ -85,9 +93,11 @@ public class InMemoryStorage<T> {
         if (minIndex.isPresent() && index >= minIndex.get()) {
             return true;
         }
-        for (CommitInfo commitInfo : commitsAfter.values()) {
-            if (commitInfo.getIndex() == index) {
-                return true;
+        if (checkRow) {
+            for (CommitInfo commitInfo : commitsAfter.values()) {
+                if (commitInfo.getIndex() == index) {
+                    return true;
+                }
             }
         }
         return false;

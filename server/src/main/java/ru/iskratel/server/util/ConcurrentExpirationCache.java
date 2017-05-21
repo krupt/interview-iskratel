@@ -38,6 +38,10 @@ public class ConcurrentExpirationCache<K, V> implements Cache<K, V> {
         this.expirationTimeMillis = unit.toMillis(expirationTime);
     }
 
+    private static long now() {
+        return System.currentTimeMillis();
+    }
+
     public V get(K key) {
         final ExpirationValue expirationValue = map.get(key);
         if (expirationValue != null) {
@@ -54,6 +58,7 @@ public class ConcurrentExpirationCache<K, V> implements Cache<K, V> {
         map.put(key, new ExpirationValue(value));
     }
 
+    @SuppressWarnings("Convert2streamapi")
     public Map<K, V> asUnmodifiableMap() {
         final Map<K, V> map = new HashMap<>();
         for (Map.Entry<K, ExpirationValue> entry : this.map.entrySet()) {
@@ -62,10 +67,6 @@ public class ConcurrentExpirationCache<K, V> implements Cache<K, V> {
             }
         }
         return Collections.unmodifiableMap(map);
-    }
-
-    private static long now() {
-        return System.currentTimeMillis();
     }
 
     private class ExpirationValue {
