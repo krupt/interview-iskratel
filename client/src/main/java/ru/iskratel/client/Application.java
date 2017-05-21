@@ -16,11 +16,11 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Properties;
 
+@SuppressWarnings("WeakerAccess")
 public class Application {
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    private static String username;
     private static String host;
     private static int port;
 
@@ -44,7 +44,7 @@ public class Application {
         }
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             System.out.println("Enter username: ");
-            username = reader.readLine();
+            String username = reader.readLine();
             if (username == null || username.trim().length() == 0) {
                 System.out.println("Username can't be null");
                 return;

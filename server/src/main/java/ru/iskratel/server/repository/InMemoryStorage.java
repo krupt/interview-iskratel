@@ -48,10 +48,6 @@ public class InMemoryStorage<T> {
                 }, COMMIT_HISTORY_CLEANER_INTERVAL, COMMIT_HISTORY_CLEANER_INTERVAL, TimeUnit.MINUTES);
     }
 
-    public T get(int index) {
-        return rows.get(index);
-    }
-
     @SuppressWarnings("unchecked")
     public Collection<T> getAll() {
         SessionService.getSession().setLastCommitId(commitId.get());
