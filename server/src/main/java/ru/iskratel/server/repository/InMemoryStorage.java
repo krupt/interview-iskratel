@@ -3,7 +3,6 @@ package ru.iskratel.server.repository;
 import ru.iskratel.server.service.SessionService;
 import ru.iskratel.server.util.Session;
 
-import javax.annotation.concurrent.ThreadSafe;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -17,10 +16,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
- * Changing rows guarded by {@link java.util.concurrent.CopyOnWriteArrayList#lock}
- */
-@ThreadSafe
 public class InMemoryStorage<T> {
 
     private static final long COMMIT_HISTORY_CLEANER_INTERVAL = 5;

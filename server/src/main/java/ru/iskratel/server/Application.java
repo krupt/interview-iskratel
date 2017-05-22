@@ -6,12 +6,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.iskratel.server.exception.InvalidConfigurationException;
 import ru.iskratel.api.model.Request;
 import ru.iskratel.api.model.Response;
+import ru.iskratel.server.exception.InvalidConfigurationException;
 import ru.iskratel.server.repository.InMemoryStorage;
 import ru.iskratel.server.service.OperationService;
 import ru.iskratel.server.service.SessionService;
+import ru.iskratel.server.util.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,9 +21,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -37,49 +36,15 @@ public class Application implements Runnable {
     private static final ObjectMapper mapper = new ObjectMapper();
     private static volatile Application instance;
 
-    private final ServerSocket serverSocket;
-    private final ExecutorService executorService;
-    private final OperationService operationService;
-    private final InMemoryStorage<String> storage;
-
     static {
         mapper.disable(JsonParser.Feature.AUTO_CLOSE_SOURCE);
         mapper.disable(JsonGenerator.Feature.AUTO_CLOSE_TARGET);
     }
 
-    public static Application getInstance() {
-        if (instance == null) {
-            synchronized (Application.class) {
-                if (instance == null) {
-                    try {
-                        instance = new Application();
-                    } catch (InvalidConfigurationException e) {
-                        log.error("", e);
-                        throw new RuntimeException(e);
-                    }
-                }
-            }
-        }
-        return instance;
-    }
-
-    public static void main(String[] args) throws InvalidConfigurationException, IOException {
-        new Thread(getInstance()).start();
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        //noinspection InfiniteLoopStatement
-        while (true) {
-            final String line = reader.readLine();
-            try {
-                final Path path = Paths.get(line);
-                final URL url = path.toUri().toURL();
-                log.info("Loading {} to classpath", url);
-                getInstance().operationService.addJarToClassPath(url);
-                log.info("{} loaded", url);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+    private final ServerSocket serverSocket;
+    private final ExecutorService executorService;
+    private final OperationService operationService;
+    private final InMemoryStorage<String> storage;
 
     private Application() throws InvalidConfigurationException {
         final Properties applicationProperties = new Properties();
@@ -110,12 +75,53 @@ public class Application implements Runnable {
         storage = new InMemoryStorage<>();
         Collection<String> lines;
         try {
-            lines = Files.readAllLines(Paths.get(this.getClass().getResource("/basic_lines.txt").toURI()));
-        } catch (IOException | URISyntaxException e) {
+            lines = StringUtils.readAllLines(getClass().getResourceAsStream("/basic_lines.txt"));
+        } catch (IOException e) {
             throw new InvalidConfigurationException("Couldn't read basic lines from file", e);
         }
         storage.init(lines);
         operationService = new OperationService();
+    }
+
+    public static Application getInstance() {
+        if (instance == null) {
+            synchronized (Application.class) {
+                if (instance == null) {
+                    try {
+                        instance = new Application();
+                    } catch (InvalidConfigurationException e) {
+                        log.error("", e);
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }
+        return instance;
+    }
+
+    public static void main(String[] args) throws InvalidConfigurationException, IOException {
+        new Thread(getInstance()).start();
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        //noinspection InfiniteLoopStatement
+        while (true) {
+            final String line = reader.readLine();
+            if ("exit".equals(line)) {
+                System.exit(1);
+            }
+            try {
+                final Path path = Paths.get(line);
+                if (path.toFile().exists()) {
+                    final URL url = path.toUri().toURL();
+                    log.info("Loading {} to classpath", url);
+                    getInstance().operationService.addJarToClassPath(url);
+                    log.info("{} loaded", url);
+                } else {
+                    System.out.println("File not found");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void run() {
